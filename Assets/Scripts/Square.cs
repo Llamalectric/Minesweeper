@@ -15,22 +15,26 @@ public class Square : MonoBehaviour
     States state = States.covered;
     States prevState;
 
+    SpriteRenderer sr;
+
+    [SerializeField]
+    Sprite uncovered, covered, flagged;
 
     // Start is called before the first frame update
     void Start()
     {
-
+        sr = GetComponent<SpriteRenderer>();
     }
 
     // Update is called once per frame
     void Update()
     {
-
+        
     }
 
-    private void OnMouseDown()
-    {
-        // Left Click
+	private void OnMouseOver()
+	{
+		// Left Click
         if (Input.GetMouseButtonDown(0))
         {
             if (state == States.covered)
@@ -38,6 +42,7 @@ public class Square : MonoBehaviour
                 ChangeState(States.uncovered);
             }
         }
+        // Right Click
         if (Input.GetMouseButtonDown(1))
         {
             if (state == States.covered)
@@ -45,11 +50,13 @@ public class Square : MonoBehaviour
                 ChangeState(States.flagged);
             }
         }
+        // Middle Click, start peeking
         if (Input.GetMouseButtonDown(2))
         {
             prevState = state;
             ChangeState(States.peeking);
         }
+        // Stop peeking 
         if (Input.GetMouseButtonUp(2))
         {
             if (state == States.peeking)
@@ -59,9 +66,21 @@ public class Square : MonoBehaviour
         }
 	}
 
-    private void ChangeState(States s)
+	private void ChangeState(States s)
     {
-       Debug.Log(s.ToString());
-       state = s;
+        Debug.Log(s.ToString());
+        state = s;
+        if (state == States.covered)
+        {
+            sr.sprite = covered;
+        } 
+        else if (state == States.uncovered)
+        {
+            sr.sprite = uncovered;
+		}
+        else if(state == States.flagged)
+        {
+            sr.sprite = flagged;
+        }
     }
 }
