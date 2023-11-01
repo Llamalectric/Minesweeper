@@ -245,6 +245,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   SquarePrefab: {fileID: 5953525847237871106, guid: b561d482175490d43aa9f2b62591066d, type: 3}
+  peekSprite: {fileID: 21300000, guid: 37f4bd80f96884c40acebeecaaa46ded, type: 3}
 --- !u!4 &1460720271
 Transform:
   m_ObjectHideFlags: 0

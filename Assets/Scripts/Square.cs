@@ -1,10 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 public class Square : MonoBehaviour
 {
-    enum States
+    public enum States
     {
         covered, flagged, uncovered, peeking
     }
@@ -20,8 +21,12 @@ public class Square : MonoBehaviour
     [SerializeField]
     Sprite uncovered, covered, flagged;
 
-    // Start is called before the first frame update
-    void Start()
+    public int[] coords = new int[2];
+
+	public States State() => state;
+
+	// Start is called before the first frame update
+	void Start()
     {
         sr = GetComponent<SpriteRenderer>();
     }
@@ -29,7 +34,10 @@ public class Square : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if (state == States.peeking)
+        {
+            gameObject.SendMessageUpwards("Peek", coords);
+        }
     }
 
 	private void OnMouseOver()
@@ -49,11 +57,15 @@ public class Square : MonoBehaviour
             {
                 ChangeState(States.flagged);
             }
+            else if (state == States.flagged)
+            {
+                ChangeState(States.covered);
+            }
         }
         // Middle Click, start peeking
         if (Input.GetMouseButtonDown(2))
         {
-            prevState = state;
+            MakeStateBackup();
             ChangeState(States.peeking);
         }
         // Stop peeking 
@@ -61,12 +73,13 @@ public class Square : MonoBehaviour
         {
             if (state == States.peeking)
             {
-                ChangeState(prevState);
+                RestoreState();
+                SendMessageUpwards("StopPeeking", coords);
             }
         }
 	}
 
-	private void ChangeState(States s)
+	public void ChangeState(States s)
     {
         Debug.Log(s.ToString());
         state = s;
@@ -83,4 +96,8 @@ public class Square : MonoBehaviour
             sr.sprite = flagged;
         }
     }
+
+    public void MakeStateBackup() { prevState = state; }
+
+    public void RestoreState() { ChangeState(prevState); prevState = state; }
 }
