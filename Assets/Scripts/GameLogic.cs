@@ -79,22 +79,6 @@ public class GameLogic : MonoBehaviour
             }
         }
         
-        /*if (column == 0) 
-        {
-            neighbors[0, 0] = neighbors[3, 0] = neighbors[5, 0] = column;
-        }
-        if (column == 9)
-        {
-            neighbors[2, 0] = neighbors[4, 0] = neighbors[7, 0] = column;
-        }
-        if (row == 0)
-        {
-            neighbors[0, 1] = neighbors[1, 1] = neighbors[2, 1] = row;
-        }
-        if (row == 9)
-        {
-            neighbors[5, 1] = neighbors[6, 1] = neighbors[7, 1] = row;
-        }*/
         return neighbors;
     }
 }
