@@ -37,7 +37,7 @@ public class Square : MonoBehaviour
         if (state == States.peeking)
         {
             gameObject.SendMessageUpwards("Peek", coords);
-        }
+        } 
     }
 
 	private void OnMouseOver()
@@ -81,7 +81,6 @@ public class Square : MonoBehaviour
 
 	public void ChangeState(States s)
     {
-        Debug.Log(s.ToString());
         state = s;
         if (state == States.covered)
         {

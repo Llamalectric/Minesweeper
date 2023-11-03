@@ -12,17 +12,21 @@ public class GameLogic : MonoBehaviour
     [SerializeField]
     Sprite peekSprite;
 
-    GameObject[,] Board = new GameObject[10, 10];
+    [SerializeField]
+    Vector2 dimensions = new Vector2(8, 8);
+
+    GameObject[,] Board;
     
     // Start is called before the first frame update
     void Start()
     {
+        Board = new GameObject[(int)dimensions.x, (int)dimensions.y];
         // Populate board
-        for (int i = 0; i < 10; i++)
+        for (int i = 0; i < dimensions.y; i++)
         {
-            for(int j = 0; j < 10; j++)
+            for(int j = 0; j < dimensions.x; j++)
             {
-                Board[i, j] = Instantiate(SquarePrefab, new Vector2(-4.5f + i, 4.5f - j), Quaternion.identity);
+                Board[i, j] = Instantiate(SquarePrefab, new Vector2(-3.5f + i, 2.5f - j), Quaternion.identity);
                 Board[i, j].transform.localScale = new Vector2(.4f, .4f);
                 Board[i, j].name = i.ToString() + ", " + j.ToString();
                 Board[i, j].GetComponent<Square>().coords[0] = i;
@@ -65,9 +69,9 @@ public class GameLogic : MonoBehaviour
     private int[,] FindNeighbors(int column, int row)
     {
         int[,] neighbors = {
-            { column - 1, row - 1 }, { column, row - 1 }, { column + 1, row - 1},
-            { column - 1, row     }, /*row,     column */ { column + 1, row    },
-            { column - 1, row + 1}, {column, row + 1}, {column + 1, row + 1    }
+            { column - 1, row - 1 }, { column, row - 1 }, { column + 1, row - 1 },
+            { column - 1, row     }, /*column, row     */ { column + 1, row     },
+            { column - 1, row + 1 }, { column, row + 1 }, { column + 1, row + 1 }
         };
         // Edge cases (pun intended)
         for (int i = 0; i < 8; i++)
@@ -75,7 +79,7 @@ public class GameLogic : MonoBehaviour
             for (int j = 0; j < 2; j++)
             {
                 if (neighbors[i, j] < 0) { neighbors[i, j] = 0; }
-                if (neighbors[i, j] > 9) { neighbors[i, j] = 9; }
+                if (neighbors[i, j] > 7) { neighbors[i, j] = 7; }
             }
         }
         
