@@ -57,7 +57,7 @@ public class Square : MonoBehaviour
 	private void OnMouseOver()
 	{
 		// Left Click
-		if (Input.GetMouseButton(0))
+		if (Input.GetMouseButtonDown(0))
 		{
 			if (state == States.covered)
 			{
