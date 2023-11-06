@@ -143,6 +143,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f60db0f1f549b6a4fa322aab70dc43c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  asset: {fileID: -944628639613478452, guid: 3e466f925ceee8148b570c62e533fb8b, type: 3}
   uncovered: {fileID: 21300000, guid: 37f4bd80f96884c40acebeecaaa46ded, type: 3}
   covered: {fileID: 21300000, guid: b16333ea1efb02946bf64ff8611f4101, type: 3}
   flagged: {fileID: 21300000, guid: e2929e5dc3a06cb439cbc04bce6d2118, type: 3}
+  coords: 0000000000000000

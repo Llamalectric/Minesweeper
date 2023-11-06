@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.Rendering;
+using UnityEngine.InputSystem.Controls;
 
 public class Square : MonoBehaviour
 {
@@ -18,6 +18,9 @@ public class Square : MonoBehaviour
     States prevState;
 
     SpriteRenderer sr;
+	[SerializeField] InputActionAsset asset;
+	InputAction action;
+	ButtonControl button;
 
     [SerializeField]
     Sprite uncovered, covered, flagged;
@@ -30,54 +33,60 @@ public class Square : MonoBehaviour
 	void Start()
     {
         sr = GetComponent<SpriteRenderer>();
+
+		action = asset.FindAction("Peek");
+
+		button = (ButtonControl)action.controls[0];
+		action.Enable();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (state == States.peeking)
-        {
-            gameObject.SendMessageUpwards("Peek", coords);
-        } 
+		// Stop peeking 
+		if (button.wasReleasedThisFrame)
+		{
+			if (state == States.peeking)
+			{
+				RestoreState();
+				SendMessageUpwards("StopPeeking", coords);
+			}
+		}
     }
 
 	private void OnMouseOver()
 	{
 		// Left Click
-        if (Input.GetMouseButtonDown(0))
-        {
-            if (state == States.covered)
-            {
-                ChangeState(States.uncovered);
-            }
-        }
-        // Right Click
-        if (Input.GetMouseButtonDown(1))
-        {
-            if (state == States.covered)
-            {
-                ChangeState(States.flagged);
-            }
-            else if (state == States.flagged)
-            {
-                ChangeState(States.covered);
-            }
-        }
-        // Middle Click, start peeking
-        if (Input.GetMouseButtonDown(2))
-        {
-            MakeStateBackup();
-            ChangeState(States.peeking);
-        }
-        // Stop peeking 
-        if (Input.GetMouseButtonUp(2))
-        {
-            if (state == States.peeking)
-            {
-                RestoreState();
-                SendMessageUpwards("StopPeeking", coords);
-            }
-        }
+		if (Input.GetMouseButton(0))
+		{
+			if (state == States.covered)
+			{
+				ChangeState(States.uncovered);
+			}
+		}
+		// Right Click
+		if (Input.GetMouseButtonDown(1))
+		{
+			if (state == States.covered)
+			{
+				ChangeState(States.flagged);
+			}
+			else if (state == States.flagged)
+			{
+				ChangeState(States.covered);
+			}
+		}
+		// Middle Click, start peeking
+		if (button.wasPressedThisFrame)
+		{
+			MakeStateBackup();
+			ChangeState(States.peeking);
+		}
+		// Continue peeking
+		if (button.isPressed)
+		{
+			gameObject.SendMessageUpwards("Peek", coords);
+		}
 	}
 
 	public void ChangeState(States s)

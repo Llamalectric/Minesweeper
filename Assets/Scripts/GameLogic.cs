@@ -16,6 +16,8 @@ public class GameLogic : MonoBehaviour
     Vector2 dimensions = new Vector2(8, 8);
 
     GameObject[,] Board;
+
+    bool isPeeking = false;
     
     // Start is called before the first frame update
     void Start()
@@ -44,6 +46,8 @@ public class GameLogic : MonoBehaviour
 
     public void Peek(int[] coords)
     {
+        if (isPeeking) return;
+        isPeeking = true;
         int[,] neighbors = FindNeighbors(coords[0], coords[1]);
         for (int i = 0; i < 8; i++)
         {
@@ -56,7 +60,8 @@ public class GameLogic : MonoBehaviour
 
     public void StopPeeking(int[] coords) 
     {
-		int[,] neighbors = FindNeighbors(coords[0], coords[1]);
+		isPeeking = false;
+        int[,] neighbors = FindNeighbors(coords[0], coords[1]);
         for (int i = 0; i < 8; i++)
         {
             if (Board[neighbors[i, 0], neighbors[i, 1]].GetComponent<Square>().State() == Square.States.covered)
