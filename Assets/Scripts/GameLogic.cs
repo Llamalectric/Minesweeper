@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Net.NetworkInformation;
 using UnityEngine;
 
 public class GameLogic : MonoBehaviour
@@ -18,6 +17,7 @@ public class GameLogic : MonoBehaviour
     GameObject[,] Board;
 
     bool isPeeking = false;
+    bool hasRandomizedMines = false;
     
     // Start is called before the first frame update
     void Start()
@@ -51,7 +51,7 @@ public class GameLogic : MonoBehaviour
         int[,] neighbors = FindNeighbors(coords[0], coords[1]);
         for (int i = 0; i < 8; i++)
         {
-            if (Board[neighbors[i, 0], neighbors[i, 1]].GetComponent<Square>().State() == Square.States.covered)
+            if (Board[neighbors[i, 0], neighbors[i, 1]].GetComponent<Square>().CurrState == Square.State.covered)
             {
                 Board[neighbors[i, 0], neighbors[i, 1]].GetComponent<SpriteRenderer>().sprite = peekSprite;
 			}
@@ -64,9 +64,9 @@ public class GameLogic : MonoBehaviour
         int[,] neighbors = FindNeighbors(coords[0], coords[1]);
         for (int i = 0; i < 8; i++)
         {
-            if (Board[neighbors[i, 0], neighbors[i, 1]].GetComponent<Square>().State() == Square.States.covered)
+            if (Board[neighbors[i, 0], neighbors[i, 1]].GetComponent<Square>().CurrState == Square.State.covered)
             {
-                Board[neighbors[i, 0], neighbors[i, 1]].GetComponent<Square>().ChangeState(Square.States.covered);
+                Board[neighbors[i, 0], neighbors[i, 1]].GetComponent<Square>().ChangeState(Square.State.covered);
             }
 		}
 	}
@@ -89,5 +89,35 @@ public class GameLogic : MonoBehaviour
         }
         
         return neighbors;
+    }
+
+    public void GameOver()
+    {
+        // TODO: Handle game over
+        Debug.Log("Game Over!");
+    }
+
+    public void RandomizeMines(int[] coords)
+    {
+        int randomx, randomy;
+		randomx = Random.Range(0, 8);
+		randomy = Random.Range(0, 8);
+		if (!hasRandomizedMines)
+        {
+            for (int i = 0; i < 10; i++)
+            {
+                while (Board[randomx, randomy].GetComponent<Square>().IsMine)
+                {
+                    randomx = Random.Range(0, 8);
+                    randomy = Random.Range(0, 8);
+                    if (randomx == coords[0] || randomy == coords[1])
+                    {
+                        continue;
+                    }
+                }
+                Board[randomx, randomy].GetComponent<Square>().IsMine = true;
+            }
+            hasRandomizedMines = true;
+        }
     }
 }

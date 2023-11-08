@@ -6,33 +6,37 @@ using UnityEngine.InputSystem.Controls;
 
 public class Square : MonoBehaviour
 {
-    public enum States
-    {
-        covered, flagged, uncovered, peeking
-    }
+	public enum State
+	{
+		covered, flagged, uncovered, peeking
+	}
 
-    // For 8x8: each is .5 units
-    // For 16x16: each is .25 units
+	// For 8x8: each is .5 units
+	// For 16x16: each is .25 units
 
-    States state = States.covered;
-    States prevState;
+	State currState = State.covered;
+	State prevState;
 
-    SpriteRenderer sr;
+	public State CurrState { get; private set; }
+
+	SpriteRenderer sr;
+	GameLogic logic;
 	[SerializeField] InputActionAsset asset;
 	InputAction action;
 	ButtonControl button;
 
-    [SerializeField]
-    Sprite uncovered, covered, flagged;
+	[SerializeField]
+	Sprite uncovered, covered, flagged, mine;
 
-    public int[] coords = new int[2];
+	public bool IsMine { get; set; }
 
-	public States State() => state;
+	public int[] coords = new int[2];
 
 	// Start is called before the first frame update
 	void Start()
     {
         sr = GetComponent<SpriteRenderer>();
+		logic = GameObject.Find("GameLogic").GetComponent<GameLogic>();
 
 		action = asset.FindAction("Peek");
 
@@ -46,11 +50,16 @@ public class Square : MonoBehaviour
 		// Stop peeking 
 		if (button.wasReleasedThisFrame)
 		{
-			if (state == States.peeking)
+			if (CurrState == State.peeking)
 			{
 				RestoreState();
-				SendMessageUpwards("StopPeeking", coords);
+				logic.StopPeeking(coords);
 			}
+		}
+
+		if (IsMine)
+		{
+			uncovered = mine;
 		}
     }
 
@@ -59,54 +68,59 @@ public class Square : MonoBehaviour
 		// Left Click
 		if (Input.GetMouseButtonDown(0))
 		{
-			if (state == States.covered)
+			if (CurrState == State.covered)
 			{
-				ChangeState(States.uncovered);
+				logic.RandomizeMines(coords);
+				ChangeState(State.uncovered);
+			}
+			if (IsMine)
+			{
+				logic.GameOver();
 			}
 		}
 		// Right Click
 		if (Input.GetMouseButtonDown(1))
 		{
-			if (state == States.covered)
+			if (CurrState == State.covered)
 			{
-				ChangeState(States.flagged);
+				ChangeState(State.flagged);
 			}
-			else if (state == States.flagged)
+			else if (CurrState == State.flagged)
 			{
-				ChangeState(States.covered);
+				ChangeState(State.covered);
 			}
 		}
 		// Middle Click, start peeking
 		if (button.wasPressedThisFrame)
 		{
 			MakeStateBackup();
-			ChangeState(States.peeking);
+			ChangeState(State.peeking);
 		}
 		// Continue peeking
 		if (button.isPressed)
 		{
-			gameObject.SendMessageUpwards("Peek", coords);
+			logic.Peek(coords);
 		}
 	}
 
-	public void ChangeState(States s)
+	public void ChangeState(State s)
     {
-        state = s;
-        if (state == States.covered)
+        CurrState = s;
+        if (CurrState == State.covered)
         {
             sr.sprite = covered;
         } 
-        else if (state == States.uncovered)
+        else if (CurrState == State.uncovered)
         {
             sr.sprite = uncovered;
 		}
-        else if(state == States.flagged)
+        else if(CurrState == State.flagged)
         {
             sr.sprite = flagged;
         }
     }
 
-    public void MakeStateBackup() { prevState = state; }
+    public void MakeStateBackup() { prevState = CurrState; }
 
-    public void RestoreState() { ChangeState(prevState); prevState = state; }
+    public void RestoreState() { ChangeState(prevState); prevState = CurrState; }
 }

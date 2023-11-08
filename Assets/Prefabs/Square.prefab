@@ -147,4 +147,5 @@ MonoBehaviour:
   uncovered: {fileID: 21300000, guid: 37f4bd80f96884c40acebeecaaa46ded, type: 3}
   covered: {fileID: 21300000, guid: b16333ea1efb02946bf64ff8611f4101, type: 3}
   flagged: {fileID: 21300000, guid: e2929e5dc3a06cb439cbc04bce6d2118, type: 3}
+  mine: {fileID: 21300000, guid: 5fb46ad0a6913e145a75dc628ebdc25d, type: 3}
   coords: 0000000000000000
