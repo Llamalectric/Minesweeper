@@ -148,4 +148,14 @@ MonoBehaviour:
   covered: {fileID: 21300000, guid: b16333ea1efb02946bf64ff8611f4101, type: 3}
   flagged: {fileID: 21300000, guid: e2929e5dc3a06cb439cbc04bce6d2118, type: 3}
   mine: {fileID: 21300000, guid: 5fb46ad0a6913e145a75dc628ebdc25d, type: 3}
+  numbers:
+  - {fileID: 21300000, guid: 37f4bd80f96884c40acebeecaaa46ded, type: 3}
+  - {fileID: 21300000, guid: 133dae1563e91094ea9ff7c9ab99a801, type: 3}
+  - {fileID: 21300000, guid: 22cba5eed0cb7614aa229b19e4a6048c, type: 3}
+  - {fileID: 21300000, guid: c4f404e5b7e2f3943be78c3ad922af3d, type: 3}
+  - {fileID: 21300000, guid: 474355c78ac5c42428c1e38c492fe2b6, type: 3}
+  - {fileID: 21300000, guid: e0f6339bb840fc4428d249ab49f93735, type: 3}
+  - {fileID: 21300000, guid: 6907464c3a5d9174489b79111df90fbf, type: 3}
+  - {fileID: 21300000, guid: 423e64b1d23db624cbb93e8f5719502e, type: 3}
+  - {fileID: 21300000, guid: 6d073d1043579624aa9f6969fceb1bd0, type: 3}
   coords: 0000000000000000

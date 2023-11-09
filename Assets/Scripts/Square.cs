@@ -26,9 +26,11 @@ public class Square : MonoBehaviour
 	ButtonControl button;
 
 	[SerializeField]
-	Sprite uncovered, covered, flagged, mine;
+	Sprite covered, flagged, mine;
+	[SerializeField] Sprite[] numbers;
 
 	public bool IsMine { get; set; }
+	public int AdjacentMines { get; set; }
 
 	public int[] coords = new int[2];
 
@@ -42,6 +44,7 @@ public class Square : MonoBehaviour
 
 		button = (ButtonControl)action.controls[0];
 		action.Enable();
+
     }
 
     // Update is called once per frame
@@ -59,7 +62,8 @@ public class Square : MonoBehaviour
 
 		if (IsMine)
 		{
-			uncovered = mine;
+			AdjacentMines = 0;
+			numbers[0] = mine;
 		}
     }
 
@@ -112,7 +116,7 @@ public class Square : MonoBehaviour
         } 
         else if (CurrState == State.uncovered)
         {
-            sr.sprite = uncovered;
+            sr.sprite = numbers[AdjacentMines];
 		}
         else if(CurrState == State.flagged)
         {

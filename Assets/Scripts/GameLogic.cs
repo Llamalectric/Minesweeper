@@ -1,6 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class GameLogic : MonoBehaviour
 {
@@ -48,12 +50,12 @@ public class GameLogic : MonoBehaviour
     {
         if (isPeeking) return;
         isPeeking = true;
-        int[,] neighbors = FindNeighbors(coords[0], coords[1]);
-        for (int i = 0; i < 8; i++)
+        List<Square> neighbors = FindNeighbors(coords[0], coords[1]);
+        for (int i = 0; i < neighbors.Count; i++)
         {
-            if (Board[neighbors[i, 0], neighbors[i, 1]].GetComponent<Square>().CurrState == Square.State.covered)
+            if (neighbors[i].CurrState == Square.State.covered)
             {
-                Board[neighbors[i, 0], neighbors[i, 1]].GetComponent<SpriteRenderer>().sprite = peekSprite;
+				Board[neighbors[i].coords[0], neighbors[i].coords[1]].GetComponent<SpriteRenderer>().sprite = peekSprite;
 			}
         }
     }
@@ -61,30 +63,26 @@ public class GameLogic : MonoBehaviour
     public void StopPeeking(int[] coords) 
     {
 		isPeeking = false;
-        int[,] neighbors = FindNeighbors(coords[0], coords[1]);
-        for (int i = 0; i < 8; i++)
+        List<Square> neighbors = FindNeighbors(coords[0], coords[1]);
+        for (int i = 0; i < neighbors.Count; i++)
         {
-            if (Board[neighbors[i, 0], neighbors[i, 1]].GetComponent<Square>().CurrState == Square.State.covered)
+            if (neighbors[i].CurrState == Square.State.covered)
             {
-                Board[neighbors[i, 0], neighbors[i, 1]].GetComponent<Square>().ChangeState(Square.State.covered);
+                neighbors[i].ChangeState(Square.State.covered);
             }
 		}
 	}
 
-    private int[,] FindNeighbors(int column, int row)
+    private List<Square> FindNeighbors(int column, int row)
     {
-        int[,] neighbors = {
-            { column - 1, row - 1 }, { column, row - 1 }, { column + 1, row - 1 },
-            { column - 1, row     }, /*column, row     */ { column + 1, row     },
-            { column - 1, row + 1 }, { column, row + 1 }, { column + 1, row + 1 }
-        };
-        // Edge cases (pun intended)
-        for (int i = 0; i < 8; i++)
+        List<Square> neighbors = new();
+        for (int i = -1; i <= 1; i++)
         {
-            for (int j = 0; j < 2; j++)
+            for (int j = -1; j <= 1; j++)
             {
-                if (neighbors[i, j] < 0) { neighbors[i, j] = 0; }
-                if (neighbors[i, j] > 7) { neighbors[i, j] = 7; }
+                if (column + i < 0 || column + i > dimensions.y - 1 || row + j < 0 || row + j > dimensions.x - 1) { continue; }
+                if (i == 0 && j == 0) { continue; }
+                neighbors.Add(Board[column + i, row + j].GetComponent<Square>());
             }
         }
         
@@ -99,24 +97,33 @@ public class GameLogic : MonoBehaviour
 
     public void RandomizeMines(int[] coords)
     {
-        int randomx, randomy;
-		randomx = Random.Range(0, 8);
+        int randomy, randomx;
 		randomy = Random.Range(0, 8);
+		randomx = Random.Range(0, 8);
+        List<Square> neighbors;
 		if (!hasRandomizedMines)
         {
             for (int i = 0; i < 10; i++)
             {
-                while (Board[randomx, randomy].GetComponent<Square>().IsMine)
+                while (Board[randomy, randomx].GetComponent<Square>().IsMine)
                 {
-                    randomx = Random.Range(0, 8);
                     randomy = Random.Range(0, 8);
-                    if (randomx == coords[0] || randomy == coords[1])
+                    randomx = Random.Range(0, 8);
+                    if (randomy == coords[0] || randomx == coords[1])
                     {
                         continue;
                     }
                 }
-                Board[randomx, randomy].GetComponent<Square>().IsMine = true;
-            }
+                Board[randomy, randomx].GetComponent<Square>().IsMine = true;
+                
+                // Update count for adjacent squares
+                neighbors = FindNeighbors(randomy, randomx);
+                for (int n = 0; n < neighbors.Count; n++)
+                {
+                    neighbors[n].AdjacentMines++;
+                }
+
+			}
             hasRandomizedMines = true;
         }
     }
