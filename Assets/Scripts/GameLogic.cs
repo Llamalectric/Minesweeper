@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using Random = UnityEngine.Random;
 
 public class GameLogic : MonoBehaviour
@@ -117,16 +118,14 @@ public class GameLogic : MonoBehaviour
         List<Square> neighbors;
 		if (!hasRandomizedMines)
         {
+            hasRandomizedMines = true;
             for (int i = 0; i < 10; i++)
             {
-                while (Board[randomy, randomx].GetComponent<Square>().IsMine)
+                
+                while (Board[randomy, randomx].GetComponent<Square>().IsMine || (coords != null && randomy == coords[0] && randomx == coords[1]))
                 {
                     randomy = Random.Range(0, 8);
                     randomx = Random.Range(0, 8);
-                    if (randomy == coords[0] || randomx == coords[1])
-                    {
-                        continue;
-                    }
                 }
                 Board[randomy, randomx].GetComponent<Square>().IsMine = true;
                 Mines.Add(Board[randomy, randomx].GetComponent<Square>());
@@ -139,7 +138,7 @@ public class GameLogic : MonoBehaviour
                 }
 
 			}
-            hasRandomizedMines = true;
+
         }
     }
 
@@ -154,5 +153,10 @@ public class GameLogic : MonoBehaviour
             }
         }
         return hasWon;
+    }
+
+    public void RestartGame()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }
