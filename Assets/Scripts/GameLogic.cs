@@ -17,13 +17,17 @@ public class GameLogic : MonoBehaviour
     Vector2 dimensions = new Vector2(8, 8);
 
     GameObject[,] Board;
+    List<Square> Mines;
 
     bool isPeeking = false;
     bool hasRandomizedMines = false;
+    public bool IsGameOver { get; set; }
     
     // Start is called before the first frame update
     void Start()
     {
+        Mines = new();
+        IsGameOver = false;
         Board = new GameObject[(int)dimensions.x, (int)dimensions.y];
         // Populate board
         for (int i = 0; i < dimensions.y; i++)
@@ -43,7 +47,12 @@ public class GameLogic : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        // Check for victory
+        if (HasWon() && hasRandomizedMines && !IsGameOver)
+        {
+            Debug.Log("You win!");
+            IsGameOver = true;
+        }
     }
 
     public void Peek(int[] coords)
@@ -93,6 +102,11 @@ public class GameLogic : MonoBehaviour
     {
         // TODO: Handle game over
         Debug.Log("Game Over!");
+        IsGameOver = true;
+        for (int i = 0; i < Mines.Count; i++)
+        {
+            Mines[i].ChangeState(Square.State.uncovered);
+        }
     }
 
     public void RandomizeMines(int[] coords)
@@ -115,6 +129,7 @@ public class GameLogic : MonoBehaviour
                     }
                 }
                 Board[randomy, randomx].GetComponent<Square>().IsMine = true;
+                Mines.Add(Board[randomy, randomx].GetComponent<Square>());
                 
                 // Update count for adjacent squares
                 neighbors = FindNeighbors(randomy, randomx);
@@ -126,5 +141,18 @@ public class GameLogic : MonoBehaviour
 			}
             hasRandomizedMines = true;
         }
+    }
+
+    private bool HasWon()
+    {
+        bool hasWon = true;
+        foreach (Square square in Mines)
+        {
+            if (square.CurrState != Square.State.flagged)
+            {
+                hasWon = false;
+            }
+        }
+        return hasWon;
     }
 }

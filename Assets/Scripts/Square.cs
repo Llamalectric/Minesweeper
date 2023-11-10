@@ -69,41 +69,44 @@ public class Square : MonoBehaviour
 
 	private void OnMouseOver()
 	{
-		// Left Click
-		if (Input.GetMouseButtonDown(0))
+		if (!logic.IsGameOver)
 		{
-			if (CurrState == State.covered)
+			// Left Click
+			if (Input.GetMouseButtonDown(0))
 			{
-				logic.RandomizeMines(coords);
-				ChangeState(State.uncovered);
+				if (CurrState == State.covered)
+				{
+					logic.RandomizeMines(coords);
+					ChangeState(State.uncovered);
+				}
+				if (IsMine)
+				{
+					logic.GameOver();
+				}
 			}
-			if (IsMine)
+			// Right Click
+			if (Input.GetMouseButtonDown(1))
 			{
-				logic.GameOver();
+				if (CurrState == State.covered)
+				{
+					ChangeState(State.flagged);
+				}
+				else if (CurrState == State.flagged)
+				{
+					ChangeState(State.covered);
+				}
 			}
-		}
-		// Right Click
-		if (Input.GetMouseButtonDown(1))
-		{
-			if (CurrState == State.covered)
+			// Middle Click, start peeking
+			if (button.wasPressedThisFrame)
 			{
-				ChangeState(State.flagged);
+				MakeStateBackup();
+				ChangeState(State.peeking);
 			}
-			else if (CurrState == State.flagged)
+			// Continue peeking
+			if (button.isPressed)
 			{
-				ChangeState(State.covered);
-			}
-		}
-		// Middle Click, start peeking
-		if (button.wasPressedThisFrame)
-		{
-			MakeStateBackup();
-			ChangeState(State.peeking);
-		}
-		// Continue peeking
-		if (button.isPressed)
-		{
-			logic.Peek(coords);
+				logic.Peek(coords);
+			} 
 		}
 	}
 
