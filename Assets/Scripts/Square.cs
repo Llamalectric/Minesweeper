@@ -15,9 +15,9 @@ public class Square : MonoBehaviour
 	// For 16x16: each is .25 units
 
 	State currState = State.covered;
-	State prevState;
 
 	public State CurrState { get; private set; }
+	public State PrevState { get; private set; }
 
 	SpriteRenderer sr;
 	GameLogic logic;
@@ -127,7 +127,7 @@ public class Square : MonoBehaviour
         }
     }
 
-    public void MakeStateBackup() { prevState = CurrState; }
+    public void MakeStateBackup() { PrevState = CurrState; }
 
-    public void RestoreState() { ChangeState(prevState); prevState = CurrState; }
+    public void RestoreState() { ChangeState(PrevState); PrevState = CurrState; }
 }

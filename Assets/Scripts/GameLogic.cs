@@ -60,12 +60,28 @@ public class GameLogic : MonoBehaviour
     {
         if (isPeeking) return;
         isPeeking = true;
+        bool uncover;
         List<Square> neighbors = FindNeighbors(coords[0], coords[1]);
+        
+        if (Board[coords[0], coords[1]].GetComponent<Square>().PrevState == Square.State.uncovered)
+            uncover = Board[coords[0], coords[1]].GetComponent<Square>().AdjacentMines == 0 && !Board[coords[0], coords[1]].GetComponent<Square>().IsMine;
+        else 
+            uncover = false;
+
         for (int i = 0; i < neighbors.Count; i++)
         {
-            if (neighbors[i].CurrState == Square.State.covered)
+            if (Board[neighbors[i].coords[0], neighbors[i].coords[1]].GetComponent<Square>().CurrState == Square.State.covered)
             {
-				Board[neighbors[i].coords[0], neighbors[i].coords[1]].GetComponent<SpriteRenderer>().sprite = peekSprite;
+                if (uncover)
+                {
+                    Board[neighbors[i].coords[0], neighbors[i].coords[1]].GetComponent<Square>().ChangeState(Square.State.uncovered);
+                    Board[neighbors[i].coords[0], neighbors[i].coords[1]].GetComponent<Square>().MakeStateBackup();
+
+				}
+                else
+                {
+                    Board[neighbors[i].coords[0], neighbors[i].coords[1]].GetComponent<SpriteRenderer>().sprite = peekSprite;
+                }
 			}
         }
     }
