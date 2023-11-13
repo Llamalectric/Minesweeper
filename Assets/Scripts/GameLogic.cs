@@ -1,8 +1,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
 public class GameLogic : MonoBehaviour
@@ -12,7 +14,7 @@ public class GameLogic : MonoBehaviour
     GameObject SquarePrefab;
 
     [SerializeField]
-    Sprite peekSprite;
+    Sprite peekSprite, dead_smiley, peek_smiley, win_smiley;
 
     [SerializeField]
     Vector2 dimensions = new Vector2(8, 8);
@@ -52,6 +54,7 @@ public class GameLogic : MonoBehaviour
         if (HasWon() && hasRandomizedMines && !IsGameOver)
         {
             Debug.Log("You win!");
+            GameObject.FindGameObjectWithTag("smiley").GetComponent<Image>().sprite = win_smiley;
             IsGameOver = true;
         }
     }
@@ -120,6 +123,7 @@ public class GameLogic : MonoBehaviour
         // TODO: Handle game over
         Debug.Log("Game Over!");
         IsGameOver = true;
+        GameObject.FindGameObjectWithTag("smiley").GetComponent<Image>().sprite = dead_smiley;
         for (int i = 0; i < Mines.Count; i++)
         {
             Mines[i].ChangeState(Square.State.uncovered);

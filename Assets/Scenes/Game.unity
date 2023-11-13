@@ -314,6 +314,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SquarePrefab: {fileID: 5953525847237871106, guid: b561d482175490d43aa9f2b62591066d, type: 3}
   peekSprite: {fileID: 21300000, guid: 37f4bd80f96884c40acebeecaaa46ded, type: 3}
+  dead_smiley: {fileID: 21300000, guid: 7899b7ab3edc8a847a2d28ba2ca1d218, type: 3}
+  peek_smiley: {fileID: 0}
+  win_smiley: {fileID: 21300000, guid: 84e88ecb9727dcf4f8e356f516bfdf30, type: 3}
   dimensions: {x: 8, y: 8}
 --- !u!4 &1460720271
 Transform:
@@ -344,7 +347,7 @@ GameObject:
   - component: {fileID: 1652065650}
   m_Layer: 5
   m_Name: Button
-  m_TagString: Untagged
+  m_TagString: smiley
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
