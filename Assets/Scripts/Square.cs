@@ -79,10 +79,7 @@ public class Square : MonoBehaviour
 					logic.RandomizeMines(coords);
 					ChangeState(State.uncovered);
 				}
-				if (IsMine)
-				{
-					logic.GameOver();
-				}
+
 			}
 			// Right Click
 			if (Input.GetMouseButtonDown(1))
@@ -119,7 +116,11 @@ public class Square : MonoBehaviour
         } 
         else if (CurrState == State.uncovered)
         {
-            sr.sprite = numbers[AdjacentMines];
+			if (IsMine && !logic.IsGameOver)
+			{
+				logic.GameOver();
+			}
+			sr.sprite = numbers[AdjacentMines];
 		}
         else if(CurrState == State.flagged)
         {

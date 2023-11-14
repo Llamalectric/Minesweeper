@@ -65,11 +65,20 @@ public class GameLogic : MonoBehaviour
         isPeeking = true;
         bool uncover;
         List<Square> neighbors = FindNeighbors(coords[0], coords[1]);
-        
+
         if (Board[coords[0], coords[1]].GetComponent<Square>().PrevState == Square.State.uncovered)
+        {
             uncover = Board[coords[0], coords[1]].GetComponent<Square>().AdjacentMines == 0 && !Board[coords[0], coords[1]].GetComponent<Square>().IsMine;
-        else 
+            if (!uncover && HasFoundAllMines(coords))
+            {
+                uncover = true;
+            }
+        }
+        else
+        {
             uncover = false;
+        }
+
 
         for (int i = 0; i < neighbors.Count; i++)
         {
@@ -179,4 +188,18 @@ public class GameLogic : MonoBehaviour
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
+
+    public bool HasFoundAllMines(int[] coords)
+    {
+        int foundMines = 0;
+        List<Square> neighbors = FindNeighbors(coords[0], coords[1]);
+        foreach (Square square in neighbors)
+        {
+            if (square.CurrState == Square.State.flagged)
+            {
+                foundMines++;
+            }
+        }
+        return foundMines == Board[coords[0], coords[1]].GetComponent<Square>().AdjacentMines;
+	}
 }
