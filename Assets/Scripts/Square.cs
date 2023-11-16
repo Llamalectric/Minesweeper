@@ -90,6 +90,7 @@ public class Square : MonoBehaviour
 				}
 				else if (CurrState == State.flagged)
 				{
+					logic.RemoveFlag();
 					ChangeState(State.covered);
 				}
 			}
@@ -109,7 +110,8 @@ public class Square : MonoBehaviour
 
 	public void ChangeState(State s)
     {
-        CurrState = s;
+		MakeStateBackup();
+		CurrState = s;
         if (CurrState == State.covered)
         {
             sr.sprite = covered;
@@ -124,7 +126,12 @@ public class Square : MonoBehaviour
 		}
         else if(CurrState == State.flagged)
         {
-            sr.sprite = flagged;
+            if (!logic.PlantFlag())
+			{
+				RestoreState();
+				return;
+			}
+			sr.sprite = flagged;
         }
     }
 

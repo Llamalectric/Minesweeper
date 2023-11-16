@@ -19,6 +19,10 @@ public class GameLogic : MonoBehaviour
     [SerializeField]
     Vector2 dimensions = new Vector2(8, 8);
 
+    [SerializeField] int numMines = 10;
+
+    int numFlags;
+
     GameObject[,] Board;
     List<Square> Mines;
 
@@ -29,6 +33,7 @@ public class GameLogic : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        numFlags = numMines;
         Mines = new();
         IsGameOver = false;
         Board = new GameObject[(int)dimensions.x, (int)dimensions.y];
@@ -148,7 +153,7 @@ public class GameLogic : MonoBehaviour
 		if (!hasRandomizedMines)
         {
             hasRandomizedMines = true;
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < numMines; i++)
             {
                 
                 while (Board[randomy, randomx].GetComponent<Square>().IsMine || (coords != null && randomy == coords[0] && randomx == coords[1]))
@@ -202,4 +207,19 @@ public class GameLogic : MonoBehaviour
         }
         return foundMines == Board[coords[0], coords[1]].GetComponent<Square>().AdjacentMines;
 	}
+
+    public bool PlantFlag()
+    {
+        if (numFlags > 0)
+        {
+            numFlags--;
+            return true;
+        }
+        return false;
+    }
+
+    public void RemoveFlag()
+    {
+        numFlags++;
+    }
 }
