@@ -21,6 +21,9 @@ public class GameLogic : MonoBehaviour
 
     [SerializeField] int numMines = 10;
 
+    [SerializeField]
+    TMPro.TMP_Text flagCounter, stopwatch;
+
     int numFlags;
 
     GameObject[,] Board;
@@ -213,6 +216,7 @@ public class GameLogic : MonoBehaviour
         if (numFlags > 0)
         {
             numFlags--;
+            flagCounter.SetText(String.Format("{0, 0:D3}", numFlags));
             return true;
         }
         return false;
@@ -221,5 +225,6 @@ public class GameLogic : MonoBehaviour
     public void RemoveFlag()
     {
         numFlags++;
-    }
+		flagCounter.SetText(String.Format("{0, 0:D3}", numFlags));
+	}
 }
