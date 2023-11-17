@@ -25,12 +25,12 @@ public class GameLogic : MonoBehaviour
     TMPro.TMP_Text flagCounter, stopwatch;
 
     int numFlags;
+    float time;
 
     GameObject[,] Board;
     List<Square> Mines;
 
-    bool isPeeking = false;
-    bool hasRandomizedMines = false;
+    bool isPeeking = false, hasRandomizedMines = false;
     public bool IsGameOver { get; set; }
     
     // Start is called before the first frame update
@@ -64,6 +64,11 @@ public class GameLogic : MonoBehaviour
             Debug.Log("You win!");
             GameObject.FindGameObjectWithTag("smiley").GetComponent<Image>().sprite = win_smiley;
             IsGameOver = true;
+        }
+        if (hasRandomizedMines && time <= 999 && !IsGameOver) 
+        {
+            time += Time.deltaTime;
+            stopwatch.SetText(String.Format("{0, 0:D3}", (int)time));    
         }
     }
 
