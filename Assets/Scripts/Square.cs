@@ -36,8 +36,8 @@ public class Square : MonoBehaviour
 
 	// Start is called before the first frame update
 	void Start()
-    {
-        sr = GetComponent<SpriteRenderer>();
+	{
+		sr = GetComponent<SpriteRenderer>();
 		logic = GameObject.Find("GameLogic").GetComponent<GameLogic>();
 
 		action = asset.FindAction("Peek");
@@ -46,11 +46,11 @@ public class Square : MonoBehaviour
 		button2 = (ButtonControl)action.controls[1];
 		action.Enable();
 
-    }
+	}
 
-    // Update is called once per frame
-    void Update()
-    {
+	// Update is called once per frame
+	void Update()
+	{
 		// Stop peeking 
 		if (button.wasReleasedThisFrame || button2.wasReleasedThisFrame)
 		{
@@ -66,7 +66,7 @@ public class Square : MonoBehaviour
 			AdjacentMines = 0;
 			numbers[0] = mine;
 		}
-    }
+	}
 
 	private void OnMouseOver()
 	{
@@ -105,38 +105,42 @@ public class Square : MonoBehaviour
 			if (button.isPressed || button2.isPressed)
 			{
 				logic.Peek(coords);
-			} 
+			}
 		}
 	}
 
 	public void ChangeState(State s)
-    {
+	{
 		MakeStateBackup();
 		CurrState = s;
-        if (CurrState == State.covered)
-        {
-            sr.sprite = covered;
-        } 
-        else if (CurrState == State.uncovered)
-        {
-			if (IsMine && !logic.IsGameOver)
-			{
-				logic.GameOver();
-			}
-			sr.sprite = numbers[AdjacentMines];
+		switch (CurrState)
+		{
+			case State.covered:
+				sr.sprite = covered;
+				break;
+
+				
+			case State.uncovered:
+				if (IsMine && !logic.IsGameOver)
+				{
+					logic.GameOver();
+				}
+				sr.sprite = numbers[AdjacentMines];
+				break;
+
+
+			case State.flagged:
+				if (!logic.PlantFlag())
+				{
+					RestoreState();
+					break;
+				}
+				sr.sprite = flagged;
+				break;
 		}
-        else if(CurrState == State.flagged)
-        {
-            if (!logic.PlantFlag())
-			{
-				RestoreState();
-				return;
-			}
-			sr.sprite = flagged;
-        }
-    }
+	}
 
-    public void MakeStateBackup() { PrevState = CurrState; }
+	public void MakeStateBackup() { PrevState = CurrState; }
 
-    public void RestoreState() { ChangeState(PrevState); PrevState = CurrState; }
+	public void RestoreState() { ChangeState(PrevState); PrevState = CurrState; }
 }
