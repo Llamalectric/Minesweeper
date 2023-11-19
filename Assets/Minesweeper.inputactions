@@ -837,6 +837,17 @@
                     "action": "Peek",
                     "isComposite": false,
                     "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "f7a9b10b-ae8c-4a0c-9a36-a3a4805d70ff",
+                    "path": "<Keyboard>/space",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Peek",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         }

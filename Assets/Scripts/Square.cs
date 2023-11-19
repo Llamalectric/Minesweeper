@@ -23,7 +23,7 @@ public class Square : MonoBehaviour
 	GameLogic logic;
 	[SerializeField] InputActionAsset asset;
 	InputAction action;
-	ButtonControl button;
+	ButtonControl button, button2;
 
 	[SerializeField]
 	Sprite covered, flagged, mine;
@@ -43,6 +43,7 @@ public class Square : MonoBehaviour
 		action = asset.FindAction("Peek");
 
 		button = (ButtonControl)action.controls[0];
+		button2 = (ButtonControl)action.controls[1];
 		action.Enable();
 
     }
@@ -51,7 +52,7 @@ public class Square : MonoBehaviour
     void Update()
     {
 		// Stop peeking 
-		if (button.wasReleasedThisFrame)
+		if (button.wasReleasedThisFrame || button2.wasReleasedThisFrame)
 		{
 			if (CurrState == State.peeking)
 			{
@@ -95,13 +96,13 @@ public class Square : MonoBehaviour
 				}
 			}
 			// Middle Click, start peeking
-			if (button.wasPressedThisFrame)
+			if (button.wasPressedThisFrame || button2.wasPressedThisFrame)
 			{
 				MakeStateBackup();
 				ChangeState(State.peeking);
 			}
 			// Continue peeking
-			if (button.isPressed)
+			if (button.isPressed || button2.isPressed)
 			{
 				logic.Peek(coords);
 			} 
