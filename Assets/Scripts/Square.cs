@@ -78,7 +78,9 @@ public class Square : MonoBehaviour
 				if (CurrState == State.covered)
 				{
 					logic.RandomizeMines(coords);
+					logic.FloodClear(coords);
 					ChangeState(State.uncovered);
+
 				}
 
 			}
